@@ -110,7 +110,7 @@ for (i in 1:ncol(beta_data)) {
 
 
 
-########## geting daily price data from beta filtered stocks   ###
+########### geting daily price data from beta filtered stocks   ###
  
 price_data <- tq_get(stock_filter,
                      from = year_ago_today_date,
@@ -132,7 +132,11 @@ arith_ret_xts <- arith_ret_tidy %>%
 
 ##### SP500 Arith Data Frame
 
-arith_ret_sp500 <- sp500_daily_returns %>%
+sp500_price_data <- tq_get('SPY',
+                     from = year_ago_today_date,
+                     get = 'stock.prices')
+
+arith_ret_sp500 <- sp500_price_data %>%
   group_by(symbol) %>%
   tq_transmute(select = close,
                mutate_fun = periodReturn,
@@ -161,7 +165,7 @@ w_ete <- spIndexTrack(constituent_train, sp500_train, lambda = 1e-7, u = 0.5, me
 cat('Number of assets used:', sum(w_ete > 1e-6))
 
 
-# DR tracking error
+# DR tracking error 
 w_dr <- spIndexTrack(constituent_train, sp500_train, lambda = 2e-8, u = 0.5, measure = 'dr')
 cat('Number of assets used:', sum(w_dr > 1e-6))
 
@@ -198,6 +202,24 @@ for (i in 1:length(w_dr)) {
 }
 
 
+print(updated_w_hete_list)
+print(updated_w_hdr_list)
+print(updated_w_ete_list)
+print(updated_w_dr_list)
 
+optimize_tickers <- names(updated_w_dr_list)
+
+m1 <- matrix(updated_w_dr_list, ncol=length(updated_w_dr_list), byrow=TRUE)
+d1 <- as.data.frame(m1, stringsAsFactors=FALSE)
+colnames(d1) <- optimize_tickers <- names(updated_w_dr_list)
+
+optimize_tickers <- c(names(updated_w_dr_list))
+
+print(optimize_tickers)
+
+print(d1)
+
+v1 <- nrow(arith_ret_xts)
+arith_ret_xts[v1,'ABT']
 
 
