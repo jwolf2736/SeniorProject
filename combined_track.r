@@ -142,6 +142,11 @@ p_analytics_error_func <- function(port_xts, sp500_xts) {
   return(port_track_error)
 }
 
+ex_ret_func <- function(daily_return_xts, sp500_daily_xts) {
+  exret <- sum(daily_return_xts[,1]) - sum(sp500_daily_xts[,1])
+  return(exret)
+}
+
 ##########################################################  End of Function Inits   ###################################################################################
 
 #####################################################   Getting SP500 ticker list   ###############################################
@@ -370,6 +375,17 @@ tracking_error_function <- function(start_date, end_date) {
 x <- as.Date("2020-04-06")
 y <- as.Date("2020-04-10")
 tracking_error_function(x,y)
+
+
+dr_ex_return <- ex_ret_func(dr_xts, main_sp500_xts)
+ete_ex_return <- ex_ret_func(ete_xts, main_sp500_xts)
+hete_ex_return <- ex_ret_func(hete_xts, main_sp500_xts)
+hdr_ex_return <- ex_ret_func(hdr_xts, main_sp500_xts)
+
+cat("The DR excess return from ", as.character(start_date), " to " , as.character(end_date), " is: " , dr_ex_return, '\n')
+cat("The ETE excess return from ", as.character(start_date), " to " , as.character(end_date), " is: " , ete_ex_return, '\n')
+cat("The HETE excess return from ", as.character(start_date), " to " , as.character(end_date), " is: " , hete_ex_return, '\n')
+cat("The HDR excess return from ",as.character(start_date), " to " , as.character(end_date), " is: " , hdr_ex_return, '\n')
 
 
 
